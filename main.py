@@ -1,5 +1,16 @@
+from tkinter import *
+from tkinter import ttk
+from mapboard import MapBoard
+
+
 def main():
-    print("Hello from battleship-boot!")
+
+    root = Tk()
+    board = MapBoard(root,4,4)
+
+    board.grid(column=0, row=0, sticky=(N, W, E, S))
+
+    root.mainloop()
 
 
 if __name__ == "__main__":
