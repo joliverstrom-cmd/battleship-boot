@@ -8,12 +8,28 @@ class MapButton(ttk.Button):
         if 'command' in kwargs:
             print("Warning: Custom command ignored in favor of check_hit")
             del kwargs['command']
+
+        # Setting styling so buttons change color when pressed
+        style = ttk.Style()
+
+        #Style for HIT buttons (orange)
+        style.map("Hit.TButton",
+            foreground=[('disabled', 'orange')] 
+        )
+        
+        # Create a style specifically for a MISS (Yellow)
+        style.map("Miss.TButton",
+            foreground=[('disabled', 'yellow')]
+        )
             
         # Initialize the button with our internal check_hit method as the command
         super().__init__(master, command=self.check_hit, **kwargs)
-    
+  
     def check_hit(self):
-        # Define the target
+
+        strike = False
+            
+
         target = (1, 2)
         
         # Get current grid position
@@ -27,10 +43,29 @@ class MapButton(ttk.Button):
         row_hit = int(info["row"])
         col_hit = int(info["column"])
         tup_hit = (row_hit, col_hit)
-
+        
         if tup_hit == target:
             print(f"Target hit at {row_hit}, {col_hit}!")
+            strike = True
         else:
             print(f"You missed at {row_hit}, {col_hit}")
+
+        self.update_hit_button(strike)
+
+
+    def update_hit_button(self, strike):
+        # Set button to pressed if it hit a target (strike = true)
+        if strike:
+            self.configure(style="Hit.TButton")
+            self.config(text=" X ")
+        #If it was a miss, set to disabled
+        else:
+            self.configure(style="Miss.TButton")
+            self.config(text="-O-")
+
+        self.state(['disabled'])
+        
+
+
 
 

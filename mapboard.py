@@ -10,7 +10,7 @@ class MapBoard(ttk.Frame):
         
         for r in range(1, rows + 1):
             for c in range(1, cols + 1):
-                btn = MapButton(self, text="-s-")
+                btn = MapButton(self, text="~s~")
                 
                 # The Board decides where the Button goes
                 btn.grid(row=r, column=c, sticky="nw") 
