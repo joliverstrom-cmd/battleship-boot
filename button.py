@@ -1,8 +1,31 @@
 from tkinter import *
 from tkinter import ttk
+from functools import partial
 
-class MapButton(ttk.Button):
+class ModeButton(ttk.Button):
     def __init__(self, master, **kwargs):
+        # We extract 'command' from kwargs if it exists, to prevent conflicts, 
+        # though usually we want to force our own command.
+
+        # Initialize the button with our internal check_hit method as the command
+        super().__init__(master, **kwargs, style="primary.TButton")
+
+class PlacementButton(ttk.Button):
+    def __init__(self, ship_coords, master, **kwargs):
+        
+        super().__init__(master, **kwargs, command = lambda: self.capture_placement(ship_coords))
+
+    def capture_placement(self, ship_coords):
+        info = self.grid_info()
+        row_placed = int(info["row"])
+        col_placed = int(info["column"])
+        tup_placed = (row_placed, col_placed)
+        ship_coords.append(tup_placed)
+        print(ship_coords)
+
+
+class PlayButton(ttk.Button):
+    def __init__(self, target_coords, master, **kwargs):
         # We extract 'command' from kwargs if it exists, to prevent conflicts, 
         # though usually we want to force our own command.
         if 'command' in kwargs:
@@ -21,16 +44,13 @@ class MapButton(ttk.Button):
         style.map("Miss.TButton",
             foreground=[('disabled', 'yellow')]
         )
-            
+ 
         # Initialize the button with our internal check_hit method as the command
-        super().__init__(master, command=self.check_hit, **kwargs)
+        super().__init__(master, command= lambda: self.check_hit(target_coords), **kwargs)
   
-    def check_hit(self):
+    def check_hit(self, target_coords):
 
         strike = False
-            
-
-        target = (1, 2)
         
         # Get current grid position
         info = self.grid_info()
@@ -44,7 +64,7 @@ class MapButton(ttk.Button):
         col_hit = int(info["column"])
         tup_hit = (row_hit, col_hit)
         
-        if tup_hit == target:
+        if tup_hit in target_coords:
             print(f"Target hit at {row_hit}, {col_hit}!")
             strike = True
         else:
@@ -56,16 +76,12 @@ class MapButton(ttk.Button):
     def update_hit_button(self, strike):
         # Set button to pressed if it hit a target (strike = true)
         if strike:
-            self.configure(style="Hit.TButton")
-            self.config(text=" X ")
+            self.configure(style="Hit.TButton", text =" X ")
+            #self.config(text=" X ")
         #If it was a miss, set to disabled
         else:
-            self.configure(style="Miss.TButton")
+            self.configure(style="Miss.TButton", text = " O ")
             self.config(text="-O-")
 
         self.state(['disabled'])
         
-
-
-
-

@@ -6,9 +6,12 @@ from mapboard import MapBoard
 def main():
 
     root = Tk()
+
+
+
     board = MapBoard(root,4,4)
 
-    board.grid(column=0, row=0, sticky=(N, W, E, S))
+    board.grid(column=4, row=4, sticky=(N, W, E, S))
 
     root.mainloop()
 
